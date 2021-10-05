@@ -1,0 +1,26 @@
+resources:
+  - name: concourse-python-app
+    type: git
+    source:
+      uri: https://github.com/prashant887/concourse-python-app.git
+      branch: dev-branch
+
+jobs:
+  - name: job-python-app
+    plan:
+      - get: concourse-python-app
+        trigger: true
+      - task: unit-test
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source: {repository: python}
+          inputs:
+            - name: concourse-python-app
+          run:
+            dir: concourse-python-app
+            path: python
+            args:
+              - -m
+              - test.calcUnitTest
